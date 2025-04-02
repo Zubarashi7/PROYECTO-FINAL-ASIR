@@ -264,7 +264,11 @@ services:
         condition: service_healthy
       kibana:
         condition: service_healthy
-    image: docker.elastic.co/logstash/logstash:${STACK_VERSION}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: logstash-custom
+    container_name: logstash
     labels:
       co.elastic.logs/module: logstash
     user: root
@@ -282,6 +286,7 @@ services:
     ports:
       - "5044:5044/udp"
     mem_limit: ${LS_MEM_LIMIT}
+    restart: always
 
   suricata:
     image: jasonish/suricata:6.0.0
@@ -298,3 +303,19 @@ services:
     environment:
       - TZ=Europe/Madrid
     restart: unless-stopped
+
+  #OPTCIONAL METRICBEAT
+  metricbeat:
+    image: docker.elastic.co/beats/metricbeat:8.0.0
+    container_name: metricbeat
+    user: root
+    volumes:
+     - /proc:/hostfs/proc:ro
+     - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
+     - /var/run/docker.sock:/var/run/docker.sock:ro
+     - ./metricbeat.yml:/usr/share/metricbeat/metricbeat.yml
+    environment:
+     - ELASTICSEARCH_HOSTS=https://es01:9200
+     - ELASTIC_USERNAME=elastic
+     - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+    restart: always

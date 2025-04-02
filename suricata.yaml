@@ -2,7 +2,7 @@ outputs:
   - eve-log:
       enabled: yes
       filetype: json
-      filename: eve.json
+      filename: /var/log/suricata/eve.json
       elasticsearch:
         enabled: yes
         index: suricata-logs
@@ -10,3 +10,6 @@ outputs:
         port: 9200
         username: elastic
         password: ${ELASTIC_PASSWORD}
+        scheme: https
+        ssl:
+          certificate-authority: /etc/suricata/certs/ca.crt
