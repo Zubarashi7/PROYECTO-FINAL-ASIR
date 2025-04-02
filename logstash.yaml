@@ -1,0 +1,6 @@
+http.host: "127.0.0.1" # Escucha solo en la interfaz local para mayor seguridad
+xpack.monitoring.enabled: true
+xpack.monitoring.elasticsearch.hosts: [ "https://es01:9200" ]
+xpack.monitoring.elasticsearch.ssl.certificate_authority: "/usr/share/logstash/certs/ca/ca.crt"
+xpack.monitoring.elasticsearch.username: "elastic"
+xpack.monitoring.elasticsearch.password: "${ELASTIC_PASSWORD}" # Usa variables de entorno
